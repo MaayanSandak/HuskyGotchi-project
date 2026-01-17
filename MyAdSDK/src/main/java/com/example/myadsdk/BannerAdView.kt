@@ -3,6 +3,8 @@ package com.example.myadsdk
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
@@ -23,16 +25,25 @@ class BannerAdView @JvmOverloads constructor(
     private val imageView: ImageView = ImageView(context)
     private var currentAdId: String? = null
 
-    // Updated IP address for physical device connection based on your screenshot
+    // TODO: Verify this is your computer's IP
     private val BASE_URL = "http://192.168.1.130:5000/"
 
     private val apiService: AdApiService
+
+    // Timer handling for auto-refresh
+    private val refreshHandler = Handler(Looper.getMainLooper())
+    private val refreshRunnable = object : Runnable {
+        override fun run() {
+            loadAd() // Load a new ad
+            refreshHandler.postDelayed(this, 10000) // Schedule next run in 10 seconds
+        }
+    }
 
     init {
         addView(imageView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
         imageView.scaleType = ImageView.ScaleType.CENTER_CROP
 
-        // Start hidden
+        // Start hidden until first ad loads
         visibility = View.GONE
 
         val retrofit = Retrofit.Builder()
@@ -59,23 +70,38 @@ class BannerAdView @JvmOverloads constructor(
             override fun onResponse(call: Call<AdResponse>, response: Response<AdResponse>) {
                 if (response.isSuccessful && response.body() != null) {
                     val ad = response.body()!!
-                    currentAdId = ad.id
-                    displayImage(ad.imageUrl)
-                    setupTargetUrl(ad.targetUrl)
-                    reportImpression(ad.id)
 
-                    // Only show the ad view if we successfully loaded data
-                    visibility = View.VISIBLE
-                } else {
-                    visibility = View.GONE
+                    // Only update if it's a different ad (optional check)
+                    if (currentAdId != ad.id) {
+                        currentAdId = ad.id
+                        displayImage(ad.imageUrl)
+                        setupTargetUrl(ad.targetUrl)
+                        reportImpression(ad.id)
+
+                        // Show the view with animation
+                        alpha = 0f
+                        visibility = View.VISIBLE
+                        animate().alpha(1f).setDuration(500).start()
+                    }
                 }
             }
 
             override fun onFailure(call: Call<AdResponse>, t: Throwable) {
-                // If error occurs (e.g. server down), keep hidden
-                visibility = View.GONE
+                // Keep hidden on error
             }
         })
+    }
+
+    // Start auto-refresh when the view is displayed on screen
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        refreshRunnable.run() // Start the loop
+    }
+
+    // Stop auto-refresh when the view is removed (to save battery)
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        refreshHandler.removeCallbacks(refreshRunnable) // Stop the loop
     }
 
     private fun displayImage(url: String) {
