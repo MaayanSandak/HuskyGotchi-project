@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">HuskyGotchi</string>
+    <string name="game_over_restart">GAME OVER - RESTART</string>
+    <string name="clean">CLEAN ✨</string>
+    <string name="play">PLAY 🎾</string>
+    <string name="sleep">SLEEP 💤</string>
+    <string name="feed">FEED 🍖</string>
+    <string name="dots">...</string>
+    <string name="clean_status">🛁 Clean</string>
+    <string name="happy">❤️ Happy</string>
+    <string name="energy">⚡ Energy</string>
+    <string name="hunger">🍖 Hunger</string>
+</resources>
