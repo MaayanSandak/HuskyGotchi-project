@@ -1,49 +1,61 @@
-# HuskyAds - Android Advertising SDK & Server 🐶
+# HuskyGotchi Ad Network SDK
 
-HuskyAds is a complete advertising solution for Android applications. It includes a backend API service for managing ads, an Android SDK for displaying ads, and an administration portal.
+HuskyGotchi Ad Network is a complete advertising ecosystem consisting of a Cloud Server, an Android SDK, and a Demo Application.
 
-## 🚀 Project Components
+## Project Resources
 
-### 1. API Service (Backend)
-A RESTful API built with **Python Flask** and **MongoDB**.
-- **Technology:** Python, Flask, PyMongo.
-- **Database:** MongoDB Atlas (Cloud).
-- **Features:** - Serve ads to the SDK.
-  - Track impressions and clicks.
-  - Admin API for creating campaigns.
-
-### 2. Android SDK (Library)
-A plug-and-play Android library that developers can integrate into their apps.
-- **Technology:** Kotlin, Retrofit, Glide.
-- **Key Feature:** `BannerAdView` - A custom view that handles ad fetching and display automatically.
-- **Integration:** ```kotlin
-    // Add to layout
-    <com.example.myadsdk.BannerAdView
-        android:id="@+id/bannerAdView"
-        android:layout_width="match_parent"
-        android:layout_height="80dp" />
-    
-    // Load in code
-    bannerAdView.loadAd()
-    ```
-
-### 3. Administration Portal
-A web-based dashboard for managing ad campaigns.
-- **Features:**
-  - Create new ads (Title, Image, Target URL).
-  - View real-time analytics (Impressions & Clicks).
-
-### 4. Example Application (HuskyGotchi)
-A Tamagotchi-style game demonstrating the integration of the HuskyAds SDK.
-- The game displays a banner ad at the bottom of the screen.
-- Ads are fetched dynamically from the server.
+* **GitHub Repository:** [Link to Code](https://github.com/MaayanSandak/HuskyGotchi-project)
+* **Admin Portal (Live):** [Link to Admin Panel](https://huskygotchi-project.onrender.com/admin)
+* **Server API:** [Link to Server](https://huskygotchi-project.onrender.com)
 
 ---
 
-## 🛠️ Setup Instructions
+## Architecture
 
-### Backend Setup
-1. Navigate to the server folder.
-2. Install dependencies:
-   ```bash
-   pip install flask flask-cors pymongo requests
+1.  **Android SDK (`MyAdSDK`):** A library that fetches and displays ads.
+2.  **Server (Python/Flask):** Manages ad logic and serves data from MongoDB.
+3.  **Database (MongoDB):** Stores campaigns, impressions, and clicks.
+4.  **Admin Portal:** Web interface for managing ad campaigns.
+
+---
+
+## SDK Installation
+
+To use the SDK in another Android project:
+
+**Step 1. Add JitPack to `settings.gradle.kts`:**
+```kotlin
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven { url = uri("[https://jitpack.io](https://jitpack.io)") }
+    }
+}
+
+Step 2. Add the dependency to build.gradle.kts:
+dependencies {
+    implementation("com.github.MaayanSandak:HuskyGotchi-project:v1.0")
+}
+
+Usage Example
+Add the BannerAdView to your XML layout:
+<com.example.myadsdk.BannerAdView
+    android:id="@+id/bannerAd"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
+
+## Screenshots
+
+### API Endpoints
+
+![API Endpoints Screenshot](API Endpoints.jpeg)
+
+### Admin Portal
+
+![Admin Panel Screenshot](admin portal.jpeg)
+
+### Android App
+
+![App with Ad Screenshot](Android App.jpeg)
