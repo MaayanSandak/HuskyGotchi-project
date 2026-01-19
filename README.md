@@ -54,7 +54,7 @@ Add the BannerAdView to your XML layout:
 
 ### Admin Portal
 
-![Admin Panel Screenshot](admin portal.jpeg)
+![Admin Panel Screenshot](Admin Portal.jpeg)
 
 ### Android App
 
