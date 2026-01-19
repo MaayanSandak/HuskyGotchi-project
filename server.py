@@ -28,7 +28,6 @@ except Exception as e:
 def index():
     return jsonify({"status": "running", "message": "Ad Server is UP and Connected"})
 
-# Serves the Admin HTML page
 @app.route('/admin')
 def admin_page():
     return render_template('admin.html')
@@ -37,15 +36,11 @@ def admin_page():
 def get_ad():
     try:
         all_ads = list(ads_collection.find())
-        
         if not all_ads:
             return jsonify({"error": "No ads found in DB"}), 404
-
         selected_ad = random.choice(all_ads)
         selected_ad['_id'] = str(selected_ad['_id'])
-
         return jsonify(selected_ad), 200
-
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -54,16 +49,10 @@ def track_impression():
     try:
         data = request.json
         ad_id = data.get('ad_id')
-
         if not ad_id:
             return jsonify({"error": "Missing ad_id"}), 400
-
-        ads_collection.update_one(
-            {"_id": ObjectId(ad_id)},
-            {"$inc": {"impressions": 1}}
-        )
+        ads_collection.update_one({"_id": ObjectId(ad_id)}, {"$inc": {"impressions": 1}})
         return jsonify({"message": "Impression recorded"}), 200
-
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -72,16 +61,10 @@ def track_click():
     try:
         data = request.json
         ad_id = data.get('ad_id')
-
         if not ad_id:
             return jsonify({"error": "Missing ad_id"}), 400
-
-        ads_collection.update_one(
-            {"_id": ObjectId(ad_id)},
-            {"$inc": {"clicks": 1}}
-        )
+        ads_collection.update_one({"_id": ObjectId(ad_id)}, {"$inc": {"clicks": 1}})
         return jsonify({"message": "Click recorded"}), 200
-
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -98,10 +81,8 @@ def create_ad():
             "impressions": 0,
             "clicks": 0
         }
-
         result = ads_collection.insert_one(new_ad)
         return jsonify({"message": "Ad created", "id": str(result.inserted_id)}), 201
-
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
