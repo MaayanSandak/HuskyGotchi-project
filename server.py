@@ -1,3 +1,4 @@
+import os
 import random
 from flask import Flask, jsonify, request
 from flask_cors import CORS
@@ -119,4 +120,7 @@ def get_all_ads():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    # Get the port from the environment variable or use 5000 as default
+    port = int(os.environ.get("PORT", 5000))
+    # Disable debug mode for production
+    app.run(host='0.0.0.0', port=port)
