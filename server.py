@@ -1,6 +1,6 @@
 import os
 import random
-from flask import Flask, jsonify, request
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from pymongo import MongoClient
 from bson.objectid import ObjectId
@@ -124,3 +124,4 @@ if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     # Disable debug mode for production
     app.run(host='0.0.0.0', port=port)
+
