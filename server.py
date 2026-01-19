@@ -22,41 +22,32 @@ try:
 except Exception as e:
     print(f"Error connecting to MongoDB: {e}")
 
-
 # --- ROUTES ---
 
 @app.route('/', methods=['GET'])
 def index():
     return jsonify({"status": "running", "message": "Ad Server is UP and Connected"})
 
-
-# --- NEW: Serve Admin HTML ---
+# Serves the Admin HTML page
 @app.route('/admin')
 def admin_page():
-    # Flask looks for this file inside the 'templates' folder
     return render_template('admin.html')
-
 
 @app.route('/api/get-ad', methods=['GET'])
 def get_ad():
     try:
-        # Fetch all ads from the cloud database
         all_ads = list(ads_collection.find())
-
+        
         if not all_ads:
             return jsonify({"error": "No ads found in DB"}), 404
 
-        # Select a random ad
         selected_ad = random.choice(all_ads)
-
-        # Convert ObjectId to string
         selected_ad['_id'] = str(selected_ad['_id'])
 
         return jsonify(selected_ad), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
 
 @app.route('/api/impression', methods=['POST'])
 def track_impression():
@@ -76,7 +67,6 @@ def track_impression():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
 @app.route('/api/click', methods=['POST'])
 def track_click():
     try:
@@ -95,8 +85,8 @@ def track_click():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
 # --- ADMIN API ROUTES ---
+
 @app.route('/admin/create-ad', methods=['POST'])
 def create_ad():
     try:
@@ -126,7 +116,5 @@ def get_all_ads():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    # Get the port from the environment variable or use 5000 as default
     port = int(os.environ.get("PORT", 5000))
-    # Disable debug mode for production
     app.run(host='0.0.0.0', port=port)
