@@ -1,6 +1,9 @@
+import org.gradle.api.publish.maven.MavenPublication
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    id("maven-publish")
 }
 
 android {
@@ -9,7 +12,6 @@ android {
 
     defaultConfig {
         minSdk = 26
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -33,7 +35,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -41,10 +42,20 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.glide)
+}
 
-    implementation (libs.retrofit)
-    implementation (libs.converter.gson)
-
-    implementation (libs.glide)
-    annotationProcessor (libs.compiler)
+afterEvaluate {
+    extensions.configure<PublishingExtension> {
+        publications {
+            create<MavenPublication>("release") {
+                from(components["release"])
+                groupId = "com.github.MaayanSandak"
+                artifactId = "myadsdk"
+                version = "1.0"
+            }
+        }
+    }
 }

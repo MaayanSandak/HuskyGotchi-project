@@ -25,8 +25,7 @@ class BannerAdView @JvmOverloads constructor(
     private val imageView: ImageView = ImageView(context)
     private var currentAdId: String? = null
 
-    // TODO: Verify this is your computer's IP
-    private val BASE_URL = "http://192.168.1.130:5000/"
+    private val BASE_URL = "https://huskygotchi-project.onrender.com/"
 
     private val apiService: AdApiService
 
