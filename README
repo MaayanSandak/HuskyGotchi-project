@@ -1,30 +1,61 @@
-# 🐾 HuskyGotchi Ad Network SDK
+# HuskyGotchi Ad Network SDK
 
-**HuskyGotchi Ad Network** is a comprehensive advertising solution developed as a final project. It consists of a cloud-based Python server, a robust Android SDK, and a dynamic Admin Portal for managing campaigns.
+HuskyGotchi Ad Network is a complete advertising ecosystem consisting of a Cloud Server, an Android SDK, and a Demo Application.
 
----
+## Project Resources
 
-## 🚀 Project Overview
-
-This project demonstrates a full-stack advertising ecosystem:
-1.  **Android SDK:** A reusable library (`MyAdSDK`) that developers can integrate to display banner ads.
-2.  **Demo App:** An Android application ("HuskyGotchi") showcasing the SDK integration.
-3.  **Backend Server:** A Python Flask server deployed on Render.
-4.  **Database:** MongoDB Atlas for storing ads and analytics (impressions/clicks).
-5.  **Admin Portal:** A web interface to create ads and view real-time performance.
+* **GitHub Repository:** [Link to Code](https://github.com/MaayanSandak/HuskyGotchi-project)
+* **Admin Portal (Live):** [Link to Admin Panel](https://huskygotchi-project.onrender.com/admin)
+* **Server API:** [Link to Server](https://huskygotchi-project.onrender.com)
 
 ---
 
-## 🛠️ Architecture
+## Architecture
 
-```mermaid
-graph TD
-    A[Android App / Demo] -->|Requests Ad| B(Android SDK)
-    B -->|GET /api/get-ad| C{Cloud Server - Render}
-    C -->|Query| D[(MongoDB Atlas)]
-    D -->|Ad Data| C
-    C -->|JSON| B
-    B -->|Displays| A
-    A -->|User Click| B
-    B -->|POST /api/click| C
-    E[Admin Portal] -->|Manage Ads| C
+1.  **Android SDK (`MyAdSDK`):** A library that fetches and displays ads.
+2.  **Server (Python/Flask):** Manages ad logic and serves data from MongoDB.
+3.  **Database (MongoDB):** Stores campaigns, impressions, and clicks.
+4.  **Admin Portal:** Web interface for managing ad campaigns.
+
+---
+
+## SDK Installation
+
+To use the SDK in another Android project:
+
+**Step 1. Add JitPack to `settings.gradle.kts`:**
+```kotlin
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven { url = uri("[https://jitpack.io](https://jitpack.io)") }
+    }
+}
+
+Step 2. Add the dependency to build.gradle.kts:
+dependencies {
+    implementation("com.github.MaayanSandak:HuskyGotchi-project:v1.0")
+}
+
+Usage Example
+Add the BannerAdView to your XML layout:
+<com.example.myadsdk.BannerAdView
+    android:id="@+id/bannerAd"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
+
+## Screenshots
+
+### API Endpoints
+
+![API Endpoints Screenshot](API Endpoints.jpeg)
+
+### Admin Portal
+
+![Admin Panel Screenshot](admin portal.jpeg)
+
+### Android App
+
+![App with Ad Screenshot](Android App.jpeg)
