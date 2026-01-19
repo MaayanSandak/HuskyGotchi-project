@@ -9,7 +9,6 @@ app = Flask(__name__)
 CORS(app)
 
 # --- CONFIGURATION ---
-# Your specific connection string
 MONGO_URI = "mongodb+srv://admin:M123456@cluster0.4vwg3eg.mongodb.net/?appName=Cluster0"
 DB_NAME = "AdNetworkDB"
 COLLECTION_ADS = "ads"
@@ -29,6 +28,13 @@ except Exception as e:
 @app.route('/', methods=['GET'])
 def index():
     return jsonify({"status": "running", "message": "Ad Server is UP and Connected"})
+
+
+# --- NEW: Serve Admin HTML ---
+@app.route('/admin')
+def admin_page():
+    # Flask looks for this file inside the 'templates' folder
+    return render_template('admin.html')
 
 
 @app.route('/api/get-ad', methods=['GET'])
@@ -90,7 +96,7 @@ def track_click():
         return jsonify({"error": str(e)}), 500
 
 
-# --- ADMIN ROUTE ---
+# --- ADMIN API ROUTES ---
 @app.route('/admin/create-ad', methods=['POST'])
 def create_ad():
     try:
@@ -124,4 +130,3 @@ if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     # Disable debug mode for production
     app.run(host='0.0.0.0', port=port)
-
