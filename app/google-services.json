@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "309712574017",
+    "project_id": "huskygotchi",
+    "storage_bucket": "huskygotchi.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:309712574017:android:71f705cbd7aac9461458c0",
+        "android_client_info": {
+          "package_name": "com.example.huskygotchi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcjQHvytC8U0PsBi59yAzFqOdILnh6h4k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
