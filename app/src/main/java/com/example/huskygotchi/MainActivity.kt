@@ -26,6 +26,9 @@ import androidx.core.content.ContextCompat
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.myadsdk.BannerAdView
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.concurrent.TimeUnit
@@ -43,6 +46,10 @@ class MainActivity : AppCompatActivity() {
     private var isSleeping = false
     private var isPerformingAction = false
     private var isPremiumUser = false
+
+    // Firebase
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
+
 
     // UI
     private lateinit var pbHunger: ProgressBar
@@ -82,6 +89,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        firebaseAnalytics = Firebase.analytics
 
         // 1. Load Premium Status
         loadData()
@@ -294,6 +303,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun sendAnalytics(eventName: String) {
+        val bundle = Bundle()
+        bundle.putString("action_type", eventName)
+        firebaseAnalytics.logEvent("user_interaction", bundle)
+
         Thread {
             try {
                 val url = URL("http://10.0.2.2:5000/log?event=$eventName")
