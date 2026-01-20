@@ -47,9 +47,7 @@ class MainActivity : AppCompatActivity() {
     private var isPerformingAction = false
     private var isPremiumUser = false
 
-    // Firebase
     private lateinit var firebaseAnalytics: FirebaseAnalytics
-
 
     // UI
     private lateinit var pbHunger: ProgressBar
@@ -114,12 +112,25 @@ class MainActivity : AppCompatActivity() {
 
         // 4. Initialize Ads
         bannerAdView = findViewById(R.id.bannerAdView)
-        updateBannerVisibility() // Force check immediately
+        updateBannerVisibility()
 
-        // 5. Auto-Rate Dialog
+        // --- TIMED POPUPS ---
+
+        // 1. Rate Us (5 Seconds)
         handler.postDelayed({
             if (isGameRunning) showRateDialog()
-        }, 8000)
+        }, 5000)
+
+        // 2. Share App (15 Seconds)
+        handler.postDelayed({
+            if (isGameRunning) showShareDialog()
+        }, 15000)
+
+        // 3. New Version (30 Seconds)
+        handler.postDelayed({
+            if (isGameRunning) showNewVersionDialog()
+        }, 30000)
+        // -----------------------------------------------------
 
         // 6. Game Buttons
         findViewById<Button>(R.id.btnFeed).setOnClickListener {
@@ -187,7 +198,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // --- REWARDED AD LOGIC (The Square Popup) ---
+    // --- REWARDED AD LOGIC ---
     private fun showRealAdPopup() {
         val dialog = Dialog(this)
         dialog.setCancelable(false)
@@ -231,7 +242,8 @@ class MainActivity : AppCompatActivity() {
         }, 5000)
     }
 
-    // --- Dialogs ---
+    // --- Dialogs (Settings, Rate, Share, Version) ---
+
     private fun showSettingsDialog() {
         val options = arrayOf("Buy Premium ($10)", "Share App", "Rate Us", "Get Free Energy (Ad)", "Reset to Free (Dev)")
 
@@ -245,19 +257,12 @@ class MainActivity : AppCompatActivity() {
                     sendAnalytics("monetization_purchase")
                 }
                 1 -> { // Share
-                    val sendIntent: Intent = Intent().apply {
-                        action = Intent.ACTION_SEND
-                        putExtra(Intent.EXTRA_TEXT, "Check out my HuskyGotchi! It's awesome! \uD83D\uDC15")
-                        type = "text/plain"
-                    }
-                    startActivity(Intent.createChooser(sendIntent, "Share via"))
-                    sendAnalytics("viral_share")
+                    shareApp()
                 }
                 2 -> { // Rate
                     showRateDialog()
                 }
                 3 -> { // Watch Ad
-                    // FIX: Always show ad popup, even if premium
                     showRealAdPopup()
                 }
                 4 -> { // RESET TO FREE (Dev)
@@ -269,16 +274,61 @@ class MainActivity : AppCompatActivity() {
         builder.show()
     }
 
+    private fun shareApp() {
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, "Check out my HuskyGotchi! It's awesome! \uD83D\uDC15")
+            type = "text/plain"
+        }
+        startActivity(Intent.createChooser(sendIntent, "Share via"))
+        sendAnalytics("viral_share")
+    }
+
+    // 1. RATE US DIALOG
     private fun showRateDialog() {
         AlertDialog.Builder(this)
-            .setTitle("Rate Us")
+            .setTitle("Rate Us \u2B50")
             .setMessage("Do you like playing with Husky? Please rate us 5 stars!")
             .setPositiveButton("⭐️⭐️⭐️⭐️⭐️") { _, _ ->
                 Toast.makeText(this, "Thank you for the love!", Toast.LENGTH_SHORT).show()
                 sendAnalytics("viral_rate_5_stars")
             }
-            .setNegativeButton("No") { _, _ -> }
+            .setNegativeButton("No, Thanks") { _, _ -> }
             .show()
+    }
+
+    // 2. SHARE APP DIALOG
+    private fun showShareDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Do you like our app? \uD83D\uDCF2")
+            .setMessage("Share our app with your community!")
+            .setPositiveButton("SURE") { _, _ ->
+                shareApp()
+            }
+            .setNegativeButton("No, Thanks") { _, _ -> }
+            .show()
+
+        sendAnalytics("popup_share_shown")
+    }
+
+    // 3. NEW VERSION DIALOG
+    private fun showNewVersionDialog() {
+        val features = """
+            • Firebase Analytics Integration
+            • Fixed Ad Display Issues
+            • Performance Improvements
+            • Cuter Husky Animations!
+        """.trimIndent()
+
+        AlertDialog.Builder(this)
+            .setTitle("What's New in Version 2.0 \uD83D\uDE80")
+            .setMessage(features)
+            .setPositiveButton("GOT IT") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+
+        sendAnalytics("popup_new_version_shown")
     }
 
     // --- Helper Methods ---
